@@ -230,6 +230,7 @@ end:
 }
 
 
+#if HAVE_FILE_IO
 /* load source data from stdin or the file specified with
    SIXEL_OPTFLAG_INPUT flag, and decode it */
 SIXELAPI SIXELSTATUS
@@ -333,6 +334,7 @@ end:
 
     return status;
 }
+#endif  // HAVE_FILE_IO
 
 
 #if HAVE_TESTS
