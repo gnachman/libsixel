@@ -51,7 +51,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>   /* isdigit */
+#include <limits.h>
+#include <math.h>
 #include <string.h>  /* memcpy */
+
 
 #if defined(HAVE_INTTYPES_H)
 # include <inttypes.h>
@@ -213,6 +216,15 @@ hls_to_rgb(int hue, int lum, int sat)
     return SIXEL_RGB(r * 255 / 100, g * 255 / 100, b * 255 / 100);
 }
 
+static int image_dimension_safe(int d)
+{
+    return d > 0 && d <= sqrt(INT_MAX);
+}
+
+static int image_size_safe(int width, int height)
+{
+    return image_dimension_safe(width) && image_dimension_safe(height);
+}
 
 static SIXELSTATUS
 image_buffer_init(
@@ -229,6 +241,10 @@ image_buffer_init(
     int r;
     int g;
     int b;
+
+    if (!image_size_safe(width, height)) {
+        return status;
+    }
 
     size = (size_t)(width * height) * sizeof(unsigned char);
     image->width = width;
@@ -287,6 +303,10 @@ image_buffer_resize(
     unsigned char *alt_buffer;
     int n;
     int min_height;
+
+    if (!image_size_safe(width, height)) {
+        return status;
+    }
 
     size = (size_t)(width * height);
     alt_buffer = (unsigned char *)sixel_allocator_malloc(allocator, size);
@@ -558,7 +578,8 @@ sixel_decode_raw_impl(
                     if (image->width < (context->pos_x + context->repeat_count) || image->height < (context->pos_y + 6)) {
                         sx = image->width * 2;
                         sy = image->height * 2;
-                        while (sx < (context->pos_x + context->repeat_count) || sy < (context->pos_y + 6)) {
+                        while (image_size_safe(sx, sy) &&
+                               (sx < (context->pos_x + context->repeat_count) || sy < (context->pos_y + 6))) {
                             sx *= 2;
                             sy *= 2;
                         }
