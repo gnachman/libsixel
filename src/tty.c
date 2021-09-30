@@ -37,9 +37,6 @@
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif  /* HAVE_UNISTD_H */
-#if HAVE_SYS_UNISTD_H
-# include <sys/unistd.h>
-#endif  /* HAVE_SYS_UNISTD_H */
 #if HAVE_SYS_SELECT_H
 # include <sys/select.h>
 #endif  /* HAVE_SYS_SELECT_H */
