@@ -24,6 +24,14 @@
 #if STDC_HEADERS
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
+# include <errno.h>
+#ifdef HAVE_GDK_PIXBUF2
+//#   pragma GCC diagnostic push
+//#   pragma GCC diagnostic ignored "-Wtypedef-redefinition"
+# include <gdk-pixbuf-2.0/gdk-pixbuf.h>
+//#   pragma GCC diagnostic pop
 #endif
 #if HAVE_STRING_H
 # include <string.h>
@@ -147,7 +155,7 @@ stbi_free(void *p)
 #endif
 
 
-# if HAVE_JPEG
+#ifdef HAVE_JPEG
 /* import from @uobikiemukot's sdump loader.h */
 static SIXELSTATUS
 load_jpeg(unsigned char **result,
