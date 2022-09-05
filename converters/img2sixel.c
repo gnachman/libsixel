@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 libsixel developers. See `AUTHORS`.
  * Copyright (c) 2014-2018 Hayaki Saito
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,32 +21,20 @@
  */
 
 #include "config.h"
-#include "malloc_stub.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 
-#if HAVE_UNISTD_H
 # include <unistd.h>
-#endif
-#if HAVE_SYS_TYPES_H
 #include <sys/types.h>
-#endif
-#if HAVE_GETOPT_H
 # include <getopt.h>
-#endif
-#if HAVE_INTTYPES_H
 # include <inttypes.h>
-#endif
-#if HAVE_SIGNAL_H
 # include <signal.h>
-#endif
 #if HAVE_SYS_SIGNAL_H
 # include <sys/signal.h>
 #endif
-
 #include <sixel.h>
 
 /* output version info to STDOUT */
@@ -323,7 +312,7 @@ void show_help(void)
             );
 }
 
-#if HAVE_SIGNAL
+#if HAVE_SYS_SIGNAL_H
 
 static int signaled = 0;
 
@@ -341,12 +330,12 @@ main(int argc, char *argv[])
     SIXELSTATUS status = SIXEL_FALSE;
     int n;
     sixel_encoder_t *encoder = NULL;
-#if HAVE_GETOPT_LONG
+#ifdef HAVE_GETOPT_LONG
     int long_opt;
     int option_index;
 #endif  /* HAVE_GETOPT_LONG */
     char const *optstring = "o:78ORp:m:eb:Id:f:s:c:w:h:r:q:kil:t:ugvSn:PE:B:C:DVH";
-#if HAVE_GETOPT_LONG
+#ifdef HAVE_GETOPT_LONG
     struct option long_options[] = {
         {"outfile",          no_argument,        &long_opt, 'o'},
         {"7bit-mode",        no_argument,        &long_opt, '7'},
@@ -393,7 +382,7 @@ main(int argc, char *argv[])
 
     for (;;) {
 
-#if HAVE_GETOPT_LONG
+#ifdef HAVE_GETOPT_LONG
         n = getopt_long(argc, argv, optstring,
                         long_options, &option_index);
 #else
@@ -403,7 +392,7 @@ main(int argc, char *argv[])
         if (n == (-1)) {
             break;
         }
-#if HAVE_GETOPT_LONG
+#ifdef HAVE_GETOPT_LONG
         if (n == 0) {
             n = long_opt;
         }
@@ -427,23 +416,17 @@ main(int argc, char *argv[])
         }
     }
 
+#if HAVE_SYS_SIGNAL_H
+
     /* set signal handler to handle SIGINT/SIGTERM/SIGHUP */
-#if HAVE_SIGNAL
-# if HAVE_DECL_SIGINT
     signal(SIGINT, signal_handler);
-# endif
-# if HAVE_DECL_SIGTERM
     signal(SIGTERM, signal_handler);
-# endif
-# if HAVE_DECL_SIGHUP
     signal(SIGHUP, signal_handler);
-# endif
     status = sixel_encoder_set_cancel_flag(encoder, &signaled);
     if (SIXEL_FAILED(status)) {
         goto error;
     }
-#else
-    (void) signal_handler;
+
 #endif
 
     if (optind == argc) {
