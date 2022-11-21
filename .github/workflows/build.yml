@@ -4,11 +4,14 @@ jobs:
   libsixel:
     runs-on: ubuntu-latest # 20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies
         run: sudo apt install libpng-dev libjpeg-dev libgd-dev libcurl4-openssl-dev libgdk-pixbuf2.0-dev libpython2-dev
       - name: ./configure
         run: ./configure --enable-python --enable-tests --with-gdk-pixbuf2 --with-gd --with-libcurl --with-jpeg --with-png
+        run: |
+          sudo apt remove -y libgd3 nginx
+          sudo apt install libpng-dev libjpeg-dev libgd-dev libgdk-pixbuf2.0-dev meson ninja-build
       - name: make
         run: make
       - name: make check
@@ -19,7 +22,7 @@ jobs:
         run: mv converters/img2sixel .
         run: mv converters/sixel2png .
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: libsixel_linux
           path: |
