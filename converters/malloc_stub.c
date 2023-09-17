@@ -36,6 +36,7 @@
 
 #if !HAVE_MALLOC
 #undef malloc
+void *malloc(size_t size);
 void *
 rpl_malloc(size_t n)
 {
