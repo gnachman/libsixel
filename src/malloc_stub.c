@@ -50,6 +50,9 @@ rpl_malloc(size_t n)
 #if !HAVE_REALLOC
 #undef realloc
 void *
+realloc(void *ptr, size_t size);
+
+void *
 rpl_realloc(void *p, size_t n)
 {
     if (n == 0) {
