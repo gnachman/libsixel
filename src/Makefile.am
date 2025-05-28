@@ -43,7 +43,6 @@ libsixel_la_SOURCES = \
 		$(srcdir)/stb_image.h \
 		$(srcdir)/writer.c \
 		$(srcdir)/writer.h \
-		$(srcdir)/stb_image_write.c \
 		$(srcdir)/stb_image_write.h \
 		$(srcdir)/status.c \
 		$(srcdir)/status.h \
