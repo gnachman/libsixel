@@ -35,7 +35,9 @@
 #endif  /* HAVE_MEMORY_H */
 
 #if !HAVE_MALLOC
+#include <stdlib.h>
 #undef malloc
+extern void *malloc(size_t);
 void *
 rpl_malloc(size_t n)
 {
@@ -47,7 +49,9 @@ rpl_malloc(size_t n)
 #endif /* !HAVE_MALLOC */
 
 #if !HAVE_REALLOC
+#include <stdlib.h>
 #undef realloc
+extern void *realloc(void *, size_t);
 void *
 rpl_realloc(void *p, size_t n)
 {
